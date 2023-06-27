@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-second-benefit-api
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      name: dev-second-benefit-api
+      labels:
+        service: dev-second-benefit-api
+    spec:
+      imagePullSecrets:
+        - name: dblys152-docker-secret
+      terminationGracePeriodSeconds: 70
+      containers:
+        - name: second-benefit-api
+          image: dblys152/second-benefit-api
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "test"
+            - name: TZ
+              value: Asia/Seoul
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: IfNotPresent
+
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      service: dev-second-benefit-api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-second-benefit-api
+spec:
+  selector:
+    service: dev-second-benefit-api
+  ports:
+    - port: 5000

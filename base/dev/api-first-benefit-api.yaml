@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-first-benefit-api
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      name: dev-first-benefit-api
+      labels:
+        service: dev-first-benefit-api
+    spec:
+      imagePullSecrets:
+        - name: dblys152-docker-secret
+      terminationGracePeriodSeconds: 70
+      containers:
+        - name: first-benefit-api
+          image: dblys152/first-benefit-api
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "test"
+            - name: TZ
+              value: Asia/Seoul
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: IfNotPresent
+
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      service: dev-first-benefit-api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-first-benefit-api
+spec:
+  selector:
+    service: dev-first-benefit-api
+  ports:
+    - port: 5000
