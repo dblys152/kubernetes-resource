@@ -4,13 +4,13 @@ kind: Kustomization
 images:
 - name: dblys152/order-api
   newName: dblys152/order-api
-  newTag: 20230627T1752
+  newTag: 20230704T0533
 - name: dblys152/first-benefit-api
   newName: dblys152/first-benefit-api
-  newTag: 20230627T1752
+  newTag: 20230704T0531
 - name: dblys152/second-benefit-api
   newName: dblys152/second-benefit-api
-  newTag: 20230627T1752
+  newTag: 20230704T0532
 
 resources:
 - ../../base/dev
